@@ -29,17 +29,13 @@ The `KnowledgeBank` is a data class that holds all the information about the tas
 
 The `KnowledgeBank` can be updated incrementally, and it supports deep merging of dictionaries to integrate new information without losing existing data.
 
-### `PromptConcierge` Class
+### `PromptConcierge`
 
 This is the main class that orchestrates the process.
 
-*   **`__init__(self, knowledge_bank: Optional[Dict[str, Any]] = None)`**: Initializes the agent. An optional `knowledge_bank` dictionary can be provided to start with pre-existing knowledge.
 *   **`learn_from_user(self)`**: Initiates an interactive session where the LLM asks clarifying questions to the user. The user's answers are parsed and used to update the `KnowledgeBank`. The session continues until the LLM determines the task is unambiguously specified.
-*   **`learn_from_events(self, events: List[Dict[str, Any]])`**: Processes a list of production events. Each event is analyzed by an LLM to extract relevant information, which is then used to update the `KnowledgeBank`. This is useful for adapting the prompt to new patterns, issues, or user feedback observed in a live environment.
-    *   **Note:** The script advises clustering production events for efficiency if dealing with a high volume.
-*   **`generate_prompt(self) -> str`**: Uses the current state of the `KnowledgeBank` to craft a system prompt for an LLM. This prompt is designed to guide the LLM in performing the task. The actual task input (e.g., text to classify) should be provided as the user prompt when using the generated system prompt.
-*   **`_parse_answer(self, question: str, answer: str) -> Dict[str, Any]`**: An internal method used by `learn_from_user` to interpret the user's response and convert it into a JSON patch for the `KnowledgeBank`.
-*   **`_parse_event(self, event: Dict[str, Any])`**: An internal method used by `learn_from_events` to analyze a production event and generate a JSON patch for the `KnowledgeBank`.
+*   **`learn_from_events(self, events: List[Dict[str, Any]])`**: Processes a list of production events. Each event is analyzed by an LLM to extract relevant information, which is then used to update the `KnowledgeBank`. This is useful for adapting the prompt to new patterns, issues, or user feedback observed in a live environment. Try to maximize the amount of information that can be extracted from each even here. i.e. processing duplicate or very similar events will end up wasting lots of tokens.
+*   **`generate_prompt(self) -> str`**: Uses the current state of the `KnowledgeBank` to craft an optimal system prompt for an LLM. The actual task input (e.g., text to classify) should be provided as the user prompt.
 
 ## Setup
 
@@ -58,7 +54,7 @@ This is the main class that orchestrates the process.
 
 ## Usage
 
-The script includes an example `if __name__ == "__main__":` block that demonstrates its usage for a sentiment classification task.
+The script includes an example that demonstrates its usage for a sentiment classification task.
 
 To run the example:
 
@@ -79,11 +75,9 @@ You can adapt the initial `knowledge_bank` and the `events` list in the `if __na
 
 ## How it Works Internally
 
-The `PromptConcierge` leverages an LLM (specified by `OPENAI_MODEL`, defaulting to "o3") for several key operations:
+The `PromptConcierge` leverages an LLM (specified by `OPENAI_MODEL`, defaulting to "o3" atm) for several key operations:
 
 *   **Asking clarifying questions:** During `learn_from_user`, an LLM generates questions based on the current `KnowledgeBank` to identify ambiguities or missing information.
 *   **Parsing user answers:** An LLM interprets the user's free-text answers and translates them into structured JSON patches to update the `KnowledgeBank`.
 *   **Analyzing production events:** Similarly, an LLM analyzes event data and converts it into JSON patches for the `KnowledgeBank`.
 *   **Generating the final prompt:** An LLM acts as a "prompt engineer" to create the optimal system prompt based on the comprehensive information in the `KnowledgeBank`.
-
-The system prompts used for these internal LLM calls are defined within the respective methods (`_parse_answer`, `_parse_event`, `generate_prompt`, `learn_from_user`). 
