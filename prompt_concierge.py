@@ -11,13 +11,9 @@ import json
 from dataclasses import dataclass, field, asdict
 from typing import Any, Dict, List, Optional
 from openai import OpenAI
-from dotenv import load_dotenv
 
-load_dotenv()
-
-
-OPENAI_MODEL = "o3" # best reasoning model we have atm
-TEMPERATURE = 0.5 # not used for OpenAI reasoning models
+DEFAULT_MODEL = "o3" # best reasoning model we have atm
+DEFAULT_TEMPERATURE = 0.5 # not used for OpenAI reasoning models
 
 @dataclass
 class KnowledgeBank:
@@ -60,17 +56,26 @@ class KnowledgeBank:
         return json.dumps(asdict(self), indent=indent, ensure_ascii=False)
 
 class PromptConcierge:
-    def __init__(self, knowledge_bank: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(
+        self,
+        api_key: str,
+        knowledge_bank: Optional[Dict[str, Any]] = None,
+        model: str = DEFAULT_MODEL,
+        temperature: float = DEFAULT_TEMPERATURE,
+    ) -> None:
         self.bank = KnowledgeBank()
         if knowledge_bank:
             self.bank.update(**knowledge_bank)
 
-        self.llm_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.model = model
+        self.temperature = temperature
+
+        self.llm_client = OpenAI(api_key=api_key)
 
     def _call_llm(self, system_prompt: str, user_prompt: str) -> str:
         return self.llm_client.chat.completions.create(
-            model=OPENAI_MODEL,
-            temperature=TEMPERATURE if not any(x in OPENAI_MODEL for x in ['o1', 'o3', 'o4']) else 1.0,
+            model=self.model,
+            temperature=self.temperature if not any(x in self.model for x in ['o1', 'o3', 'o4']) else 1.0,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
@@ -188,6 +193,14 @@ if __name__ == "__main__":
 
     # Example task: sentiment classification
 
+    from dotenv import load_dotenv
+
+    load_dotenv()
+
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise ValueError("OPENAI_API_KEY is not set")
+
     # --- Initialize with a knowledge bank ---
     knowledge_bank = {
         "overview": "Classify the sentiment (positive, neutral, negative) of e-commerce product reviews.",
@@ -198,7 +211,7 @@ if __name__ == "__main__":
             "It broke in two days -> negative",
         ],
     }
-    agent = PromptConcierge(knowledge_bank)
+    agent = PromptConcierge(api_key, knowledge_bank)
 
     print("\n--- Initial prompt ---\n")
     print(agent.generate_prompt())
