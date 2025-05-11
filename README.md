@@ -1,6 +1,8 @@
-<picture>
-  <img alt="PromptConcierge Logo" src="static/img1.png" width="60%">
-</picture>
+<p align="center">
+  <picture>
+    <img alt="PromptConcierge Logo" src="static/img1.png" width="70%">
+  </picture>
+</p>
 
 Prompt Concierge is an autonomous agent that interviews a user about a task, builds a knowledge bank, crafts an optimal LLM prompt, and keeps that prompt up-to-date as new production data arrives.
 
