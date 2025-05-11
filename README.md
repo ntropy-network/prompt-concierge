@@ -19,7 +19,7 @@ The core idea is to create a living prompt that evolves with new insights and da
 
 ### `KnowledgeBank`
 
-The knowledge bank is a data class that holds all the information about the task. It has predefined sections for:
+The knowledge bank is a data class that holds all the information about the task. It can be updated incrementally to integrate new information without losing existing data. It has predefined sections for:
 
 *   `overview`: A general description of the task.
 *   `inputs`: Expected inputs for the task, including their types and any special considerations (e.g., edge cases).
@@ -28,8 +28,6 @@ The knowledge bank is a data class that holds all the information about the task
 *   `style_guidelines`: Preferences for the LLM's tone, style, or persona.
 *   `examples`: Illustrative input/output pairs or specific scenarios.
 *   `misc`: A dictionary for any other relevant information not fitting into the above categories.
-
-The knowledge bank can be updated incrementally, and it supports deep merging of dictionaries to integrate new information without losing existing data.
 
 ### `PromptConcierge`
 
