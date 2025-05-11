@@ -39,16 +39,16 @@ This is the main class that orchestrates the process.
 
 ## Setup
 
-1.  **Clone or Download:** Get the `prompt_concierge.py` script.
-2.  **Install Dependencies:**
+1.  **Clone the repo**
+2.  **Install dependencies:**
     You'll need Python 3 and the OpenAI Python SDK:
     ```bash
     pip install openai
     ```
+
 ## Usage
 
-The script includes an example that demonstrates its usage for a sentiment
-classification task. To run the example, set your `OPENAI_API_KEY` as an environment variable. You can do this by creating a `.env` file in the same directory as the script with the following content:
+The repo includes an example sentiment classification task. To run the example, set your `OPENAI_API_KEY` as an environment variable. You can do this by creating a `.env` file in the same directory as the script with the following content:
 ```
 OPENAI_API_KEY="your_openai_api_key_here"
 ```
@@ -58,7 +58,7 @@ Then:
 
 ```bash
 pip install python-dotenv
-python prompt_concierge.py
+python example.py
 ```
 
 This will:
