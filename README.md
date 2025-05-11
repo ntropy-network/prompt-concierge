@@ -43,22 +43,24 @@ This is the main class that orchestrates the process.
 2.  **Install Dependencies:**
     You'll need Python 3 and the following packages:
     ```bash
-    pip install openai python-dotenv
+    pip install openai
     ```
-3.  **Environment Variable:**
-    The script uses the OpenAI API. You need to set your `OPENAI_API_KEY` as an environment variable. You can do this by creating a `.env` file in the same directory as the script with the following content:
-    ```
-    OPENAI_API_KEY="your_openai_api_key_here"
-    ```
-    Replace `"your_openai_api_key_here"` with your actual OpenAI API key.
-
 ## Usage
 
 The script includes an example that demonstrates its usage for a sentiment classification task.
 
 To run the example:
 
+Set your `OPENAI_API_KEY` as an environment variable. You can do this by creating a `.env` file in the same directory as the script with the following content:
+```
+OPENAI_API_KEY="your_openai_api_key_here"
+```
+Replace `"your_openai_api_key_here"` with your actual OpenAI API key.
+
+Then:
+
 ```bash
+pip install python-dotenv
 python prompt_concierge.py
 ```
 
@@ -69,7 +71,7 @@ This will:
 
 ## How it Works Internally
 
-The `PromptConcierge` leverages an reasoning model (specified by `OPENAI_MODEL`, currently defaulting to "o3") for several key operations:
+The `PromptConcierge` leverages an reasoning model (currently defaulting to OpenAI o3) for several key operations:
 
 *   **Asking clarifying questions:** During `learn_from_user`, an LLM generates questions based on the current knowledge bank to identify ambiguities or missing information.
 *   **Parsing user answers:** An LLM interprets the user's free-text answers and translates them into structured JSON patches to update the knowledge bank.
