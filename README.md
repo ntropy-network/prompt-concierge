@@ -41,17 +41,14 @@ This is the main class that orchestrates the process.
 
 1.  **Clone or Download:** Get the `prompt_concierge.py` script.
 2.  **Install Dependencies:**
-    You'll need Python 3 and the following packages:
+    You'll need Python 3 and the OpenAI Python SDK:
     ```bash
     pip install openai
     ```
 ## Usage
 
-The script includes an example that demonstrates its usage for a sentiment classification task.
-
-To run the example:
-
-Set your `OPENAI_API_KEY` as an environment variable. You can do this by creating a `.env` file in the same directory as the script with the following content:
+The script includes an example that demonstrates its usage for a sentiment
+classification task. To run the example, set your `OPENAI_API_KEY` as an environment variable. You can do this by creating a `.env` file in the same directory as the script with the following content:
 ```
 OPENAI_API_KEY="your_openai_api_key_here"
 ```
@@ -68,12 +65,3 @@ This will:
 1.  Initialize the `PromptConcierge` with a predefined knowledge bank for a sentiment analysis task.
 3.  You will then be asked interactive questions to refine the task. 
 5.  Process a few production events to further refine the prompt.
-
-## How it Works Internally
-
-The `PromptConcierge` leverages an reasoning model (currently defaulting to OpenAI o3) for several key operations:
-
-*   **Asking clarifying questions:** During `learn_from_user`, an LLM generates questions based on the current knowledge bank to identify ambiguities or missing information.
-*   **Parsing user answers:** An LLM interprets the user's free-text answers and translates them into structured JSON patches to update the knowledge bank.
-*   **Analyzing production events:** Similarly, an LLM analyzes event data and converts it into JSON patches for the knowledge bank.
-*   **Generating the final prompt:** An LLM acts as a "prompt engineer" to create the optimal system prompt based on information from the knowledge bank.
